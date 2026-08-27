@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Truly IAS - Create Account</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: linear-gradient(135deg, #FF7F00 0%, #FFA500 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+    .container { background: #fff; padding: 35px; border-radius: 16px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); width: 100%; max-width: 420px; }
+    .logo { text-align: center; margin-bottom: 24px; }
+    .logo h1 { color: #FF7F00; font-size: 30px; letter-spacing: 1px; }
+    .logo p { color: #777; font-size: 13px; margin-top: 4px; }
+    h2 { text-align: center; color: #222; margin-bottom: 18px; }
+    input { width: 100%; padding: 12px 14px; margin: 9px 0; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 14px; transition: 0.3s; }
+    input:focus { border-color: #FF7F00; outline: none; box-shadow: 0 0 0 3px rgba(255,127,0,0.15); }
+    button { width: 100%; padding: 12px; background: #FF7F00; color: #fff; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 600; margin-top: 12px; transition: 0.3s; }
+    button:hover { background: #E66F00; transform: translateY(-1px); }
+    .error { color: #d32f2f; font-size: 12px; min-height: 16px; margin-top: 4px; }
+    .link { text-align: center; margin-top: 16px; font-size: 14px; color: #444; }
+    .link a { color: #FF7F00; text-decoration: none; font-weight: 700; }
+    .link a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">
+      <h1>Truly IAS</h1>
+      <p>India's Trusted UPSC Platform</p>
+    </div>
+    <h2>Create Account</h2>
+    <form id="registerForm">
+      <input type="text" id="name" placeholder="Full Name" required>
+      <input type="email" id="email" placeholder="Email Address" required>
+      <input type="password" id="password" placeholder="Password (min 6 chars)" required>
+      <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+      <p class="error" id="errorMsg"></p>
+      <button type="submit">Register Now</button>
+    </form>
+    <p class="link">Already have an account? <a href="login.html">Login Here</a></p>
+  </div>
+
+  <script>
+    document.getElementById('registerForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim().toLowerCase();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const errorMsg = document.getElementById('errorMsg');
+      errorMsg.innerText = "";
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if(name.length < 3){ errorMsg.innerText = "Name must be at least 3 characters"; return; }
+      if(!emailRegex.test(email)){ errorMsg.innerText = "Enter a valid email address"; return; }
+      if(password.length < 6){ errorMsg.innerText = "Password must be at least 6 characters"; return; }
+      if(password !== confirmPassword){ errorMsg.innerText = "Passwords do not match!"; return; }
+
+      let users = JSON.parse(localStorage.getItem('trulyUsers')) || [];
+      if(users.find(u => u.email === email)){ errorMsg.innerText = "Email already registered!"; return; }
+
+      users.push({name, email, password});
+      localStorage.setItem('trulyUsers', JSON.stringify(users));
+      alert("Registration Successful for " + name + "!");
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>
